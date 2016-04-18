@@ -43,10 +43,22 @@ function [] = fc_learning
     De_Doutput_i = De_Dotput_o .* Do_Doutput_i;
     
     d_W_hidden_to_output = repmat(De_Doutput_i, [2 1])' .* repmat(hidden_o, [2 1]);
+    
+    dE_Dhidden_o = De_Doutput_i * W_hidden_to_output;
+    do_Dhidden_i = activation_der(hidden_o);
+    dE_Dhidden_i = do_Dhidden_i .* dE_Dhidden_o;
+    
+    
+    d_W_input_to_hidden = repmat(dE_Dhidden_i, [2 1])' .* repmat(input_values, [2 1]);
+    
+
+    
+    
+    
+    W_input_to_hidden = W_input_to_hidden - learning_rate * d_W_input_to_hidden;
     W_hidden_to_output = W_hidden_to_output - learning_rate * d_W_hidden_to_output;
-    
-    
-    
+
+
 end
 
 function [y] = activation(x)
