@@ -9,7 +9,7 @@ function [] = fc_learning
     target_values = [0 ; 1; 1; 0];
     
     hidden_neurons_count = 2;
-    rng(0,'v5uniform');
+    %rng(0,'v5uniform');
     INIT_EPISLON = 0.8;
 
     W1 = [    0.6881   -0.2164 -0.7690;
@@ -19,14 +19,14 @@ function [] = fc_learning
     bias = -1;
 
     W_input_to_hidden = rand(size(input_values,2)+1, hidden_neurons_count) * (2*INIT_EPISLON) - INIT_EPISLON;
-    W_input_to_hidden = W1';
+    %W_input_to_hidden = W1';
     
     assert(isequal(size(W_input_to_hidden), [size(input_values,2)+1 hidden_neurons_count]));
     
     
     output_neurons_count = 1;
     W_hidden_to_output = rand(hidden_neurons_count+1, output_neurons_count) * (2*INIT_EPISLON) - INIT_EPISLON;
-    W_hidden_to_output = W2';
+    %W_hidden_to_output = W2';
     
     assert(isequal(size(W_hidden_to_output), [hidden_neurons_count+1 output_neurons_count]));
     
