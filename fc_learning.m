@@ -2,11 +2,13 @@
 
 function [] = fc_learning
 
-    % https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
-    learning_rate = 2.0;
+
+    addpath('datasets');
+    learning_rate = 5.0;
     
-    input_values = [0 0; 0 1; 1 0; 1 1];
-    target_values = [0; 1; 1; 0];
+    %[input_train, output_train, input_test, output_test] = GenerateDatasetMNIST();
+    [input_train, output_train, input_test, output_test] = GenerateDatasetXOR();
+    
     
     hidden_neurons_count = 2;
     output_neurons_count = 1;
@@ -14,22 +16,18 @@ function [] = fc_learning
     rng(0,'v5uniform');
     INIT_EPISLON = 0.8;
 
-    W_input_to_hidden = rand(size(input_values,2)+1, hidden_neurons_count) * (2*INIT_EPISLON) - INIT_EPISLON;
-    assert(isequal(size(W_input_to_hidden), [size(input_values,2)+1 hidden_neurons_count]));
+    W_input_to_hidden = rand(size(input_train,2)+1, hidden_neurons_count) * (2*INIT_EPISLON) - INIT_EPISLON;
+    assert(isequal(size(W_input_to_hidden), [size(input_train,2)+1 hidden_neurons_count]));
     
     W_hidden_to_output = rand(hidden_neurons_count+1, output_neurons_count) * (2*INIT_EPISLON) - INIT_EPISLON;
     assert(isequal(size(W_hidden_to_output), [hidden_neurons_count+1 output_neurons_count]));
     
     for iter = 1:20000
-        ind = rem(iter,4);
+        % https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+    
+        input = input_train;%(ind,:);
+        target = output_train;%(ind,:);
         
-        if(ind == 0)
-            ind = 4;
-        end
-        
-        target = target_values;%(ind,:);
-        input = input_values;%(ind,:);
-
         bias = -ones(size(input,1), 1);
         
         % forward pass
@@ -71,9 +69,10 @@ function [] = fc_learning
         %DW
     end
     
-     
-    target = target_values;
-    input = input_values;
+     %%%%%%%%%%%%%%%%%%
+     %%%% test
+    target = output_test;
+    input = input_test;
 
     bias = -ones(size(input,1), 1);
 
