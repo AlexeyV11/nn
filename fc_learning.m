@@ -3,7 +3,7 @@
 function [] = fc_learning
 
     % https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
-    learning_rate = 0.5;
+    learning_rate = 0.7;
     
     input_values = [0 0; 0 1; 1 0; 1 1];
     target_values = [0 ; 1; 1; 0];
@@ -15,6 +15,8 @@ function [] = fc_learning
     W1 = [    0.6881   -0.2164 -0.7690;
             0.2379   -0.1385 -0.0963  ];
     W2 = [   -0.4840   -0.6903 -0.1433];
+    
+    bias = -1;
 
     W_input_to_hidden = rand(size(input_values,2)+1, hidden_neurons_count) * (2*INIT_EPISLON) - INIT_EPISLON;
     W_input_to_hidden = W1';
@@ -30,8 +32,13 @@ function [] = fc_learning
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    for iter = 1:20
-        ind = round(rand(1)*3)+1;
+    for iter = 1:10000
+        ind = rem(iter,4);
+        
+        if(ind == 0)
+            ind = 4;
+        end
+        
         target = target_values(ind,:);
         input = input_values(ind,:);
         %target = target_values;
@@ -39,15 +46,15 @@ function [] = fc_learning
         
         
         % forward pass
-        hidden_i = sum(W_input_to_hidden' .* repmat([input 1], [hidden_neurons_count 1]),2);% [input 1] * W_input_to_hidden
+        hidden_i = sum(W_input_to_hidden' .* repmat([input bias], [hidden_neurons_count 1]),2);% [input 1] * W_input_to_hidden
         hidden_o = activation(hidden_i)';
 
-        output_i = sum(W_hidden_to_output' .*  repmat([hidden_o 1], [output_neurons_count 1]),2);% + hidden_bias * W_hidden_to_output_bias;
+        output_i = sum(W_hidden_to_output' .*  repmat([hidden_o bias], [output_neurons_count 1]),2);% + hidden_bias * W_hidden_to_output_bias;
         output_o = activation(output_i)';
 
         e = (target - output_o) .* (target - output_o) / 2;
 
-        disp(sum(e));
+        %disp(sum(e));
         
         % backward pass
         De_Dotput_o = (output_o - target);
@@ -55,19 +62,28 @@ function [] = fc_learning
         De_Doutput_i = De_Dotput_o .* Do_Doutput_i;
         % delta_hidden=delta_output*W2.*dsigmoid(Z2);
 
-        d_W_hidden_to_output = repmat(De_Doutput_i, [numel([hidden_o 1]) 1])' .* repmat([hidden_o 1], [numel(De_Doutput_i) 1]);
+        d_W_hidden_to_output = repmat(De_Doutput_i, [numel([hidden_o bias]) 1])' .* repmat([hidden_o bias], [numel(De_Doutput_i) 1]);
 
         dE_Dhidden_o = W_hidden_to_output * De_Doutput_i';
-        do_Dhidden_i = activation_der([hidden_i' 1]);
+        do_Dhidden_i = activation_der([hidden_i' bias]);
         dE_Dhidden_i = do_Dhidden_i .* dE_Dhidden_o';
         dE_Dhidden_i = dE_Dhidden_i(1:end-1);
+        
+        %De_Doutput_i
+        %dE_Dhidden_i
 
-        d_W_input_to_hidden = repmat(dE_Dhidden_i, [numel([input 1]) 1])' .* repmat([input 1], [numel(dE_Dhidden_i) 1]);
+        d_W_input_to_hidden = repmat(dE_Dhidden_i, [numel([input bias]) 1])' .* repmat([input bias], [numel(dE_Dhidden_i) 1]);
 
         W_input_to_hidden = W_input_to_hidden - learning_rate * d_W_input_to_hidden';
         W_hidden_to_output = W_hidden_to_output - learning_rate * d_W_hidden_to_output';
 
         %pause(0.00005);
+        
+        %WWW = [W_input_to_hidden' ; W_hidden_to_output']; 
+        %WWW
+        
+        %DW = [d_W_input_to_hidden ; d_W_hidden_to_output];
+        %DW
         
     end
     
@@ -77,14 +93,14 @@ function [] = fc_learning
         
         
         % forward pass
-        hidden_i = sum(W_input_to_hidden' .* repmat([input 1], [hidden_neurons_count 1]),2);% + input_bias * W_input_to_hidden_bias;
+        hidden_i = sum(W_input_to_hidden' .* repmat([input bias], [hidden_neurons_count 1]),2);% + input_bias * W_input_to_hidden_bias;
         hidden_o = activation(hidden_i)';
 
-        output_i = sum(W_hidden_to_output' .*  repmat([hidden_o 1], [output_neurons_count 1]),2);% + hidden_bias * W_hidden_to_output_bias;
+        output_i = sum(W_hidden_to_output' .*  repmat([hidden_o bias], [output_neurons_count 1]),2);% + hidden_bias * W_hidden_to_output_bias;
         output_o = activation(output_i)';
     
-        disp(output_o);
         e = (target - output_o) .* (target - output_o) / 2;
+        disp([num2str(output_o) ' ' num2str(e)]);
      end
 
 end
