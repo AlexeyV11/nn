@@ -22,7 +22,7 @@ function [] = fc_learning
     W_hidden_to_output = rand(hidden_neurons_count+1, output_neurons_count) * (2*INIT_EPISLON) - INIT_EPISLON;
     assert(isequal(size(W_hidden_to_output), [hidden_neurons_count+1 output_neurons_count]));
     
-    for iter = 1:20000
+    for iter = 1:2000
         % https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
     
         input = input_train;%(ind,:);
