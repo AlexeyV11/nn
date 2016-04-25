@@ -1,4 +1,4 @@
-classdef LossEuclidean < LossInterface
+classdef LossSoftmax < LossInterface
     properties
     end
     
@@ -7,13 +7,17 @@ classdef LossEuclidean < LossInterface
     end
     
     methods (Access = 'public')
-        function obj = LossEuclidean(dimension)
+        function obj = LossSoftmax(dimension)
             obj.featureDimension = dimension;
         end
         
         function [result] = feedForward(obj, activationsPrev, activationsTarget)
-            result = (activationsPrev - activationsTarget) .* (activationsPrev - activationsTarget) / 2;
-            result = sum(result, 2);
+            
+            % http://cs231n.github.io/linear-classify/#softmax
+            score_new = activationsPrev - repmat(max(activationsPrev')', 1, size(activationsPrev,2));
+            probabilities = exp(score_new)./repmat(sum(exp(score_new'))', 1, size(activationsPrev,2));
+            
+            result = -log(probabilities(boolean(activationsTarget)));
         end
         
         function [gradientToPrev] = backPropagate(obj, activationsPrev, activationsTarget)

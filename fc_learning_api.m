@@ -6,34 +6,62 @@ function [ output_args ] = fc_learning_api( input_args )
     addpath('layers');
     addpath('nn');
     
-    hidden_neurons_count = 2;
-    output_neurons_count = 1;
     
-    [input_train, output_train, input_test, output_test] = GenerateDatasetXOR();
+    [input_train, output_train_labels, output_train, input_test, output_test_labels, output_test] = GenerateDatasetMNIST();
+    
+    
+    hidden_neurons_count = 100;
+    output_neurons_count = 10;
+    input_dim = size(input_train,2);
     
     rng(0,'v5uniform');
 
     nn = network();
     
-    nn.addLayer(LayerInput(2));
-    nn.addLayer(LayerFC(2,hidden_neurons_count));
+    nn.addLayer(LayerInput(input_dim));
+    nn.addLayer(LayerFC(input_dim,hidden_neurons_count));
     nn.addLayer(LayerActivationSigmoid());
     nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count));
     nn.addLayer(LayerActivationSigmoid());
-    nn.addLayer(LossEuclidean(output_neurons_count));
+    nn.addLayer(LossSoftmax(output_neurons_count));
     
-    learning_rate = 5.0;
+    learningRate = 0.1;
+    minibatchSize = 64;
         
-    for i = 1:2000
-        output_train_current = nn.forwardPropogate(input_train);
-        loss = nn.computeLoss(output_train_current, output_train);
-        nn.backPropagate(output_train_current, output_train, learning_rate);
+    for epoch = 1:10000
+        
+        if(rem(epoch, 200) == 1)
+            output_train_full = nn.forwardPropogate(input_train);
+            loss_full_train = nn.computeLoss(output_train_full, output_train);
+
+            [val_train, ind_train] = max(output_train_full');
+            ind_train = ind_train'-1;
+            accuracy_train = (sum(ind_train == output_train_labels)) / numel(ind_train);
+
+            output_test_full = nn.forwardPropogate(input_test);
+            loss_full_test = nn.computeLoss(output_test_full, output_test);
+
+            [val_test, ind_test] = max(output_test_full');
+            ind_test = ind_test'-1;
+            accuracy_test = (sum(ind_test == output_test_labels)) / numel(ind_test);
+
+            disp(['epoch ' num2str(epoch)]);
+            disp(['train loss : ' num2str(sum(loss_full_train)/numel(loss_full_train)) ' test loss : ' num2str(sum(loss_full_test)/numel(loss_full_test))]);
+            disp(['train accuracy : ' num2str(accuracy_train) ' test accuracy : ' num2str(accuracy_test)]);
+        end
+        
+        itersCount = ceil(size(output_train,2)/minibatchSize);
+        
+        for iters = 1:itersCount 
+            samples = input_train((iters-1)*minibatchSize+1:iters*minibatchSize,:);
+            answers = output_train((iters-1)*minibatchSize+1:iters*minibatchSize,:);
+            
+            output_train_batch = nn.forwardPropogate(samples);
+            loss = nn.computeLoss(output_train_batch, answers);
+            nn.backPropagate(output_train_batch, answers, learningRate );
+        end
+
+        
     end
-    
-    
-    output_test_current = nn.forwardPropogate(input_train);
-    
-    disp(output_test_current);
-    
 end
 
