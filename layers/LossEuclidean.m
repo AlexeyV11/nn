@@ -13,6 +13,7 @@ classdef LossEuclidean < LossInterface
         
         function [result] = feedForward(obj, activationsPrev, activationsTarget)
             result = (activationsPrev - activationsTarget) .* (activationsPrev - activationsTarget) / 2;
+            result = sum(result, 2)
         end
         
         function [gradientToPrev] = backPropagate(obj, activationsPrev, activationsTarget)

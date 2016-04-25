@@ -1,4 +1,4 @@
-classdef network
+classdef network < handle
     %NETWORK Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -11,7 +11,7 @@ classdef network
             obj.layers = {};
         end
         
-        function [obj] = addLayer(obj, layer)
+        function [] = addLayer(obj, layer)
             obj.layers{end+1} = layer;
         end
         
