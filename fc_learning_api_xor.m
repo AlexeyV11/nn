@@ -16,9 +16,9 @@ function [ output_args ] = fc_learning_api( input_args )
     nn = network();
     
     nn.addLayer(LayerInput(2));
-    nn.addLayer(LayerFC(2,hidden_neurons_count));
+    nn.addLayer(LayerFC(2,hidden_neurons_count,WeightFillerUniform(0.8)));
     nn.addLayer(LayerActivationSigmoid());
-    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count));
+    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerUniform(0.8)));
     nn.addLayer(LayerActivationSigmoid());
     nn.addLayer(LossEuclidean(output_neurons_count));
     
