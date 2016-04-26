@@ -12,12 +12,10 @@ classdef LossSoftmax < LossInterface
         end
         
         function [result] = feedForward(obj, activationsPrev, activationsTarget)
-            
-            % http://cs231n.github.io/linear-classify/#softmax
-            score_new = activationsPrev - repmat(max(activationsPrev')', 1, size(activationsPrev,2));
-            probabilities = exp(score_new)./repmat(sum(exp(score_new'))', 1, size(activationsPrev,2));
-            
-            result = -log(probabilities(boolean(activationsTarget)));
+            % https://jamesmccaffrey.wordpress.com/2013/11/05/why-you-should-use-cross-entropy-error-instead-of-classification-error-or-mean-squared-error-for-neural-network-classifier-training/
+            activationsNorm = activationsPrev./repmat(sum(activationsPrev,2),[1,size(activationsPrev,2)]);
+            activationsLog = -log(activationsNorm);
+            result = activationsLog(boolean(activationsTarget));
         end
         
         function [gradientToPrev] = backPropagate(obj, activationsPrev, activationsTarget)
