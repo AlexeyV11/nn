@@ -29,9 +29,8 @@ function [ output_args ] = fc_learning_api( input_args )
     learningRate = 0.05;
     minibatchSize = 64;
         
-    for epoch = 1:100000
-        
-        if(rem(epoch, 200) == 1)
+    for epoch = 1:500
+        if(rem(epoch, 1) == 0)
             output_train_full = nn.forwardPropogate(input_train);
             loss_full_train = nn.computeLoss(output_train_full, output_train);
 
@@ -46,12 +45,12 @@ function [ output_args ] = fc_learning_api( input_args )
             ind_test = ind_test'-1;
             accuracy_test = (sum(ind_test == output_test_labels)) / numel(ind_test);
 
-            disp(['epoch ' num2str(epoch)]);
+            disp(['epoch ' num2str(epoch-1)]);
             disp(['train loss : ' num2str(sum(loss_full_train)/numel(loss_full_train)) ' test loss : ' num2str(sum(loss_full_test)/numel(loss_full_test))]);
             disp(['train accuracy : ' num2str(accuracy_train) ' test accuracy : ' num2str(accuracy_test)]);
         end
         
-        itersCount = ceil(size(output_train,2)/minibatchSize);
+        itersCount = floor(size(output_train,1)/minibatchSize);
         
         for iters = 1:itersCount 
             samples = input_train((iters-1)*minibatchSize+1:iters*minibatchSize,:);
