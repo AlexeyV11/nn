@@ -16,6 +16,7 @@ classdef LossSoftmax < LossInterface
             activationsNorm = activationsPrev./repmat(sum(activationsPrev,2),[1,size(activationsPrev,2)]);
             activationsLog = -log(activationsNorm);
             result = activationsLog(boolean(activationsTarget));
+            result = min(result, 20.0);
         end
         
         function [gradientToPrev] = backPropagate(obj, activationsPrev, activationsTarget)
