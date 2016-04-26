@@ -10,9 +10,8 @@ classdef LayerFC < LayerInterface
     end
     
     methods (Access = 'public')
-        function obj = LayerFC(neuronsPrevCount, neuronsCurrentCount)
-            INIT_EPISLON = 0.8;
-            obj.weights = rand(neuronsPrevCount+1, neuronsCurrentCount) * (2*INIT_EPISLON) - INIT_EPISLON;
+        function obj = LayerFC(neuronsPrevCount, neuronsCurrentCount,weightFiller)
+            obj.weights = weightFiller.generateWeights([neuronsPrevCount+1, neuronsCurrentCount]);
             
             obj.neuronsPrevCount = neuronsPrevCount;
             obj.neuronsCurrentCount = neuronsCurrentCount;

@@ -4,6 +4,7 @@ function [ output_args ] = fc_learning_api( input_args )
 
     addpath('datasets');
     addpath('layers');
+    addpath('weight_filler');
     addpath('nn');
     
     
@@ -19,16 +20,16 @@ function [ output_args ] = fc_learning_api( input_args )
     nn = network();
     
     nn.addLayer(LayerInput(input_dim));
-    nn.addLayer(LayerFC(input_dim,hidden_neurons_count));
+    nn.addLayer(LayerFC(input_dim,hidden_neurons_count,WeightFillerGaussian(0.1)));
     nn.addLayer(LayerActivationSigmoid());
-    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count));
+    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.1)));
     nn.addLayer(LayerActivationSigmoid());
     nn.addLayer(LossSoftmax(output_neurons_count));
     
-    learningRate = 0.1;
+    learningRate = 0.05;
     minibatchSize = 64;
         
-    for epoch = 1:10000
+    for epoch = 1:100000
         
         if(rem(epoch, 200) == 1)
             output_train_full = nn.forwardPropogate(input_train);
