@@ -1,13 +1,7 @@
 function [ output_args ] = fc_learning_api( input_args )
 %FC_LEARNING_API Summary of this function goes here
 %   Detailed explanation goes here
-
-    addpath('datasets');
-    addpath('layers');
-    addpath('weight_filler');
-    addpath('gradient_updater');
-    addpath('nn');
-    
+    startup();
     
     [input_train, output_train_labels, output_train, input_test, output_test_labels, output_test] = GenerateDatasetMNIST();
     
@@ -63,7 +57,7 @@ function [ output_args ] = fc_learning_api( input_args )
             
             output_train_batch = nn.forwardPropogate(samples);
             loss = nn.computeLoss(output_train_batch, answers);
-            nn.backPropagate(output_train_batch, answers, learningRate );
+            nn.backPropagate(output_train_batch, answers);
         end
 
         

@@ -32,7 +32,7 @@ classdef network < handle
             loss = obj.layers{end}.feedForward(forwardOutput, groundTrooth);
         end
         
-        function [backwardOutput] = backPropagate(obj, forwardOutput, groundTrooth, lerningRate)
+        function [backwardOutput] = backPropagate(obj, forwardOutput, groundTrooth)
             %backward pass
             backwardOutput = [];
             for l=numel(obj.layers):-1:1
