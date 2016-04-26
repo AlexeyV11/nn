@@ -5,6 +5,7 @@ function [ output_args ] = fc_learning_api( input_args )
     addpath('datasets');
     addpath('layers');
     addpath('weight_filler');
+    addpath('gradient_updater');
     addpath('nn');
     
     
@@ -16,18 +17,22 @@ function [ output_args ] = fc_learning_api( input_args )
     input_dim = size(input_train,2);
     
     rng(0,'v5uniform');
-
-    nn = network();
     
-    nn.addLayer(LayerInput(input_dim));
-    nn.addLayer(LayerFC(input_dim,hidden_neurons_count,WeightFillerGaussian(0.001)));
-    nn.addLayer(LayerActivationRELU);
-    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.001)));
-    nn.addLayer(LayerActivationRELU);
-    nn.addLayer(LossSoftmax(output_neurons_count));
     
     learningRate = 0.05;
     minibatchSize = 64;
+    
+    gradientUpdater = GradientUpdaterSimple(learningRate, minibatchSize);
+
+    nn = network();
+    
+    nn.addLayer(LayerInput(input_dim), gradientUpdater);
+    nn.addLayer(LayerFC(input_dim,hidden_neurons_count,WeightFillerGaussian(0.001)), gradientUpdater);
+    nn.addLayer(LayerActivationRELU, gradientUpdater);
+    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.001)), gradientUpdater);
+    nn.addLayer(LayerActivationRELU, gradientUpdater);
+    nn.addLayer(LossSoftmax(output_neurons_count), gradientUpdater);
+    
         
     for epoch = 1:500
         if(rem(epoch, 1) == 0)

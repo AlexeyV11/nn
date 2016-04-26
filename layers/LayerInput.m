@@ -13,7 +13,7 @@ classdef LayerInput < LayerInterface
             result = activationsPrev;
         end
         
-        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, learningRate)
+        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, gradientUpdater)
             gradientToPrev = {};
         end
         

@@ -4,15 +4,18 @@ classdef network < handle
     
     properties (Access = 'private')        
         layers;
+        gradientUpdaters;
     end
     
     methods (Access = 'public')
         function obj = network()
             obj.layers = {};
+            obj.gradientUpdaters = {};
         end
         
-        function [] = addLayer(obj, layer)
+        function [] = addLayer(obj, layer, gradientUpdater)
             obj.layers{end+1} = layer;
+            obj.gradientUpdaters{end+1} = gradientUpdater;
         end
         
         function [output] = forwardPropogate(obj, input)
@@ -25,8 +28,8 @@ classdef network < handle
             end
         end
         
-        function [loss] = computeLoss(obj, outputForward, groundTrooth)
-            loss = obj.layers{end}.feedForward(outputForward, groundTrooth);
+        function [loss] = computeLoss(obj, forwardOutput, groundTrooth)
+            loss = obj.layers{end}.feedForward(forwardOutput, groundTrooth);
         end
         
         function [backwardOutput] = backPropagate(obj, forwardOutput, groundTrooth, lerningRate)
@@ -34,7 +37,7 @@ classdef network < handle
             backwardOutput = [];
             for l=numel(obj.layers):-1:1
                 if(find(strcmp(superclasses(obj.layers{l}), 'LayerInterface')))
-                    backwardOutput = obj.layers{l}.backPropagate(backwardOutput, lerningRate);
+                    backwardOutput = obj.layers{l}.backPropagate(backwardOutput, obj.gradientUpdaters{l});
                 else
                     backwardOutput = obj.layers{l}.backPropagate(forwardOutput, groundTrooth);
                 end

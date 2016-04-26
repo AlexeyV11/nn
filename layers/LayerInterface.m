@@ -10,9 +10,9 @@ classdef (Abstract) LayerInterface < handle
     end
     
     methods(Abstract, Access = public)
-        [result] = feedForward(obj, inputs);
+        [result] = feedForward(obj, activationsPrev);
         
-        [gradient] = backPropagate(obj);
+        [gradient] = backPropagate(obj, gradientToCurrent, gradientUpdater);
         
         
         % Return the layer type

@@ -15,7 +15,7 @@ classdef LayerActivationRELU < LayerInterface
             result = max(activationsPrev, 0);
         end
         
-        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, learningRate)
+        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, gradientUpdater)
             gradientToPrev = (obj.activationsPrev > 0) .* gradientToCurrent;
         end
         

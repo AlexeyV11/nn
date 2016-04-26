@@ -4,7 +4,10 @@ function [ output_args ] = fc_learning_api( input_args )
 
     addpath('datasets');
     addpath('layers');
+    addpath('weight_filler');
+    addpath('gradient_updater');
     addpath('nn');
+    
     
     hidden_neurons_count = 2;
     output_neurons_count = 1;

@@ -15,7 +15,7 @@ classdef LayerActivationSigmoid < LayerInterface
             result = 1 ./ (1 + exp(-activationsPrev));
         end
         
-        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, learningRate)
+        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, gradientUpdater)
             result = 1 ./ (1 + exp(-obj.activationsPrev));
             gradientToPrev = result .* (1 - result);
             gradientToPrev = gradientToPrev .* gradientToCurrent;

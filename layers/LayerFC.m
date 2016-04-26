@@ -23,7 +23,7 @@ classdef LayerFC < LayerInterface
             result = obj.activationsPrevWithBias * obj.weights; %sum(W_input_to_hidden' .* repmat([input bias], [hidden_neurons_count 1]),2);%
         end
         
-        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, learningRate)
+        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, gradientUpdater)
             % backpropogate gradient
             gradientToPrev = gradientToCurrent * obj.weights';
             % remove bias column
@@ -31,8 +31,8 @@ classdef LayerFC < LayerInterface
             
             % update current weights
             dWeights = gradientToCurrent' * obj.activationsPrevWithBias;
-            obj.weights = obj.weights - dWeights' * learningRate / size(obj.activationsPrevWithBias,1);
-            
+            obj.weights = gradientUpdater.update(obj.weights, dWeights);
+            %obj.weights = obj.weights - dWeights' * learningRate / size(obj.activationsPrevWithBias,1);
             %obj.weights
         end
         
