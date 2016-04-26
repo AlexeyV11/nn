@@ -10,7 +10,7 @@ function [ output_args ] = fc_learning_api( input_args )
     [input_train, output_train_labels, output_train, input_test, output_test_labels, output_test] = GenerateDatasetMNIST();
     
     
-    hidden_neurons_count = 100;
+    hidden_neurons_count = 50;
     output_neurons_count = 10;
     input_dim = size(input_train,2);
     
