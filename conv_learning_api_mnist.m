@@ -23,14 +23,14 @@ function [ output_args ] = conv_learning_api_mnist( input_args )
     nn.addLayer(LayerInput(input_dim), gradientUpdater);
     
     conv_kernels_1 = 16;
-    nn.addLayer(LayerConv2([28,28,1],3,conv_kernels_1,WeightFillerGaussian(0.001)), gradientUpdater);
+    nn.addLayer(LayerConv2([28,28,1],5,conv_kernels_1,WeightFillerGaussian(0.001)), gradientUpdater);
     nn.addLayer(LayerActivationRELU, gradientUpdater);
     
-    conv_kernels_2 = 32;
-    nn.addLayer(LayerConv2([28,28,conv_kernels_1],3,conv_kernels_2,WeightFillerGaussian(0.001)), gradientUpdater);
-    nn.addLayer(LayerActivationRELU, gradientUpdater);
+    %conv_kernels_2 = 32;
+    %nn.addLayer(LayerConv2([28,28,conv_kernels_1],3,conv_kernels_2,WeightFillerGaussian(0.001)), gradientUpdater);
+    %nn.addLayer(LayerActivationRELU, gradientUpdater);
     
-    fc_inputs_1 = 28*28*conv_kernels_2;
+    fc_inputs_1 = 28*28*conv_kernels_1;
     nn.addLayer(LayerFC(fc_inputs_1,hidden_neurons_count,WeightFillerGaussian(0.001)), gradientUpdater);
     nn.addLayer(LayerActivationRELU, gradientUpdater);
     nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.001)), gradientUpdater);
@@ -49,8 +49,16 @@ function [ output_args ] = conv_learning_api_mnist( input_args )
             
             output_train_batch = nn.forwardPropogate(samples);
             loss = nn.computeLoss(output_train_batch, answers);
+            
+            disp(['loss : ' num2str(sum(loss)/numel(loss))]);
+            
+            if(sum(loss)/numel(loss) < 2.5)
+                v = 1;
+            end
             nn.backPropagate(output_train_batch, answers);
         end
+        
+        
 
         if(rem(epoch, 1) == 0)
             output_train_full = nn.forwardPropogate(input_train);

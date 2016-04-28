@@ -2,7 +2,7 @@ classdef network < handle
     %NETWORK Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (Access = 'private')        
+    properties (Access = 'public')        
         layers;
         gradientUpdaters;
     end
