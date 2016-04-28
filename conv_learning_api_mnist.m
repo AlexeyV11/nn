@@ -13,7 +13,7 @@ function [ output_args ] = conv_learning_api_mnist( input_args )
     rng(0,'v5uniform');
     
     
-    learningRate = 0.05;
+    learningRate = 0.5;
     minibatchSize = 64;
     
     gradientUpdater = GradientUpdaterSimple(learningRate, minibatchSize);
@@ -22,7 +22,7 @@ function [ output_args ] = conv_learning_api_mnist( input_args )
     
     nn.addLayer(LayerInput(input_dim), gradientUpdater);
     
-    conv_kernels_1 = 16;
+    conv_kernels_1 = 8;
     nn.addLayer(LayerConv2([28,28,1],5,conv_kernels_1,WeightFillerGaussian(0.001)), gradientUpdater);
     nn.addLayer(LayerActivationRELU, gradientUpdater);
     
@@ -31,14 +31,14 @@ function [ output_args ] = conv_learning_api_mnist( input_args )
     %nn.addLayer(LayerActivationRELU, gradientUpdater);
     
     fc_inputs_1 = 28*28*conv_kernels_1;
-    nn.addLayer(LayerFC(fc_inputs_1,hidden_neurons_count,WeightFillerGaussian(0.001)), gradientUpdater);
-    nn.addLayer(LayerActivationRELU, gradientUpdater);
-    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.001)), gradientUpdater);
-    nn.addLayer(LayerActivationRELU, gradientUpdater);
+    nn.addLayer(LayerFC(fc_inputs_1,hidden_neurons_count,WeightFillerGaussian(0.01)), gradientUpdater);
+    nn.addLayer(LayerActivationSigmoid, gradientUpdater);
+    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.01)), gradientUpdater);
+    nn.addLayer(LayerActivationSigmoid, gradientUpdater);
     nn.addLayer(LossSoftmax(output_neurons_count), gradientUpdater);
     
         
-    for epoch = 1:500
+    for epoch = 1:20
         
         
         itersCount = floor(size(output_train,1)/minibatchSize);
@@ -50,14 +50,15 @@ function [ output_args ] = conv_learning_api_mnist( input_args )
             output_train_batch = nn.forwardPropogate(samples);
             loss = nn.computeLoss(output_train_batch, answers);
             
-            disp(['loss : ' num2str(sum(loss)/numel(loss))]);
+            %disp(['loss : ' num2str(sum(loss)/numel(loss))]);
             
-            if(sum(loss)/numel(loss) < 2.5)
-                v = 1;
-            end
+            %if(sum(loss)/numel(loss) < 1.0)
+            %    v = 1;
+            %end
             nn.backPropagate(output_train_batch, answers);
         end
         
+        pause(1);
         
 
         if(rem(epoch, 1) == 0)
@@ -80,5 +81,7 @@ function [ output_args ] = conv_learning_api_mnist( input_args )
             disp(['train accuracy : ' num2str(accuracy_train) ' test accuracy : ' num2str(accuracy_test)]);
         end
     end
+    
+    aaa = 0;
 end
 

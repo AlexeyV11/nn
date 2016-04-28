@@ -66,7 +66,7 @@ classdef LayerConv2 < LayerInterface
                 
                 %%%
                 for i=1:obj.outputDimensions(3)
-                    obj.weights{i} = gradientUpdater.update(obj.weights{i}, dweights{i});
+                    obj.weights{i} = gradientUpdater.update(obj.weights{i}, flip(flip(dweights{i},1),2));
                 end
                 
                 
