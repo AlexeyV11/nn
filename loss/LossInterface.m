@@ -5,8 +5,8 @@ classdef LossInterface
     properties (Access = 'private')        
     end
     methods(Abstract, Access = public)
-        [result] = feedForward(obj, activationsPrev, activationsTarget)
-        [gradientToPrev] = backPropagate(obj, activationsPrev, activationsTarget)
+        [result] = computeLoss(obj, activationsPrev, activationsTarget)
+        [gradientToPrev] = computeDerivative(obj, activationsPrev, activationsTarget)
     end    
 end
 

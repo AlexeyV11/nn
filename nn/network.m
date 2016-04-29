@@ -21,25 +21,19 @@ classdef network < handle
         function [output] = forwardPropogate(obj, input)
             % forward pass
             output = input;
-            for l=1:numel(obj.layers)-1
+            for l=1:numel(obj.layers)
                 if(find(strcmp(superclasses(obj.layers{l}), 'LayerInterface')))
                     output = obj.layers{l}.feedForward(output);
                 end
             end
         end
         
-        function [loss] = computeLoss(obj, forwardOutput, groundTrooth)
-            loss = obj.layers{end}.feedForward(forwardOutput, groundTrooth);
-        end
-        
-        function [backwardOutput] = backPropagate(obj, forwardOutput, groundTrooth)
+        function [backwardOutput] = backPropagate(obj, lossDerivative)
             %backward pass
-            backwardOutput = [];
+            backwardOutput = lossDerivative;
             for l=numel(obj.layers):-1:1
                 if(find(strcmp(superclasses(obj.layers{l}), 'LayerInterface')))
                     backwardOutput = obj.layers{l}.backPropagate(backwardOutput, obj.gradientUpdaters{l});
-                else
-                    backwardOutput = obj.layers{l}.backPropagate(forwardOutput, groundTrooth);
                 end
             end
         end

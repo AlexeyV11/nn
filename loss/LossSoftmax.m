@@ -11,7 +11,7 @@ classdef LossSoftmax < LossInterface
             obj.featureDimension = dimension;
         end
         
-        function [result] = feedForward(obj, activationsPrev, activationsTarget)
+        function [result] = computeLoss(obj, activationsPrev, activationsTarget)
             % https://jamesmccaffrey.wordpress.com/2013/11/05/why-you-should-use-cross-entropy-error-instead-of-classification-error-or-mean-squared-error-for-neural-network-classifier-training/
             activationsNorm = activationsPrev./repmat(sum(activationsPrev,2),[1,size(activationsPrev,2)]);
             activationsLog = -log(activationsNorm);
@@ -19,7 +19,7 @@ classdef LossSoftmax < LossInterface
             result = min(result, 20.0);
         end
         
-        function [gradientToPrev] = backPropagate(obj, activationsPrev, activationsTarget)
+        function [gradientToPrev] = computeDerivative(obj, activationsPrev, activationsTarget)
             gradientToPrev = (activationsPrev - activationsTarget);
         end
         

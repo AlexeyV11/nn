@@ -11,12 +11,12 @@ classdef LossEuclidean < LossInterface
             obj.featureDimension = dimension;
         end
         
-        function [result] = feedForward(obj, activationsPrev, activationsTarget)
+        function [result] = computeLoss(obj, activationsPrev, activationsTarget)
             result = (activationsPrev - activationsTarget) .* (activationsPrev - activationsTarget) / 2;
             result = sum(result, 2);
         end
         
-        function [gradientToPrev] = backPropagate(obj, activationsPrev, activationsTarget)
+        function [gradientToPrev] = computeDerivative(obj, activationsPrev, activationsTarget)
             gradientToPrev = (activationsPrev - activationsTarget);
         end
         

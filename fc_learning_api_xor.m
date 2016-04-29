@@ -22,13 +22,13 @@ function [ output_args ] = fc_learning_api( input_args )
     nn.addLayer(LayerActivationSigmoid(), gradientUpdater);
     nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerUniform(0.8)), gradientUpdater);
     nn.addLayer(LayerActivationSigmoid(), gradientUpdater);
-    nn.addLayer(LossEuclidean(output_neurons_count), gradientUpdater);
+    lossLayer = LossEuclidean(output_neurons_count);
     
     
     for i = 1:2000
         output_train_current = nn.forwardPropogate(input_train);
-        loss = nn.computeLoss(output_train_current, output_train);
-        nn.backPropagate(output_train_current, output_train);
+        %loss = lossLayer.computeLoss(output_train_current, output_train);
+        nn.backPropagate(lossLayer.computeDerivative(output_train_current, output_train));
     end
     
     

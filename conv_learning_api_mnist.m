@@ -35,7 +35,8 @@ function [ output_args ] = conv_learning_api_mnist( input_args )
     nn.addLayer(LayerActivationSigmoid, gradientUpdater);
     nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.01)), gradientUpdater);
     nn.addLayer(LayerActivationSigmoid, gradientUpdater);
-    nn.addLayer(LossSoftmax(output_neurons_count), gradientUpdater);
+    
+    lossLayer = LossSoftmax(output_neurons_count);
     
         
     for epoch = 1:20
@@ -48,38 +49,15 @@ function [ output_args ] = conv_learning_api_mnist( input_args )
             answers = output_train((iters-1)*minibatchSize+1:iters*minibatchSize,:);
             
             output_train_batch = nn.forwardPropogate(samples);
-            loss = nn.computeLoss(output_train_batch, answers);
+            loss = lossLayer.computeLoss(output_train_batch, answers);
+            disp(['loss : ' num2str(sum(loss)/numel(loss))]);
             
-            %disp(['loss : ' num2str(sum(loss)/numel(loss))]);
-            
-            %if(sum(loss)/numel(loss) < 1.0)
-            %    v = 1;
-            %end
-            nn.backPropagate(output_train_batch, answers);
+            nn.backPropagate(lossLayer.computeDerivative(output_train_batch, answers));
         end
         
         pause(1);
         
 
-        if(rem(epoch, 1) == 0)
-            output_train_full = nn.forwardPropogate(input_train);
-            loss_full_train = nn.computeLoss(output_train_full, output_train);
-
-            [val_train, ind_train] = max(output_train_full');
-            ind_train = ind_train'-1;
-            accuracy_train = (sum(ind_train == output_train_labels)) / numel(ind_train);
-
-            output_test_full = nn.forwardPropogate(input_test);
-            loss_full_test = nn.computeLoss(output_test_full, output_test);
-
-            [val_test, ind_test] = max(output_test_full');
-            ind_test = ind_test'-1;
-            accuracy_test = (sum(ind_test == output_test_labels)) / numel(ind_test);
-
-            disp(['epoch ' num2str(epoch-1)]);
-            disp(['train loss : ' num2str(sum(loss_full_train)/numel(loss_full_train)) ' test loss : ' num2str(sum(loss_full_test)/numel(loss_full_test))]);
-            disp(['train accuracy : ' num2str(accuracy_train) ' test accuracy : ' num2str(accuracy_test)]);
-        end
     end
     
     aaa = 0;
