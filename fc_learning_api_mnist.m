@@ -25,7 +25,7 @@ function [ output_args ] = fc_learning_api( input_args )
     nn.addLayer(LayerActivationRELU,  {});
     
         
-    epochs = 20;
+    epochs = 50;
     minibatchSize = 64;
     
     trainSoftmaxNetwork(nn, epochs, minibatchSize, train_input, train_classes);
