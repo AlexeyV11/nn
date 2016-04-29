@@ -14,20 +14,21 @@ function [ output_args ] = fc_learning_api( input_args )
     
     
     learningRate = 0.05;
-    minibatchSize = 64;
     momentum = 0.9;
     weightDecay = 0.0005;
     
     nn = network();
     
     nn.addLayer(LayerInput(input_dim), {});
-    nn.addLayer(LayerFC(input_dim,hidden_neurons_count,WeightFillerGaussian(0.001)),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, minibatchSize, momentum, weightDecay));
+    nn.addLayer(LayerFC(input_dim,hidden_neurons_count,WeightFillerGaussian(0.001)),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, momentum, weightDecay));
     nn.addLayer(LayerActivationRELU,  {});
-    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.001)),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, minibatchSize, momentum, weightDecay));
+    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.001)),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, momentum, weightDecay));
     nn.addLayer(LayerActivationRELU,  {});
     
     lossLayer = LossSoftmax(output_neurons_count);
         
+    minibatchSize = 64;
+    
     for epoch = 1:500
         if(rem(epoch, 1) == 0)
             output_train_full = nn.forwardPropogate(input_train);

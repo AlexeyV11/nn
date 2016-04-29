@@ -33,6 +33,8 @@ classdef LayerFC < LayerInterface
             activationsPrevWithBias = [activationsPrev bias];
             
             gradientCurrent = gradientToCurrent' * activationsPrevWithBias;
+
+            gradientCurrent = gradientCurrent / size(activationsPrev,1);
             %obj.weights = gradientUpdater.update(obj.weights, dWeights);
             %obj.weights = obj.weights - dWeights' * learningRate / size(obj.activationsPrevWithBias,1);
             %obj.weights

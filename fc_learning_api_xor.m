@@ -12,8 +12,7 @@ function [ output_args ] = fc_learning_api( input_args )
     rng(0,'v5uniform');
 
     learningRate = 5.0;
-    minibatchSize = 4;
-    gradientUpdater = GradientUpdaterSimple(learningRate, minibatchSize);
+    gradientUpdater = GradientUpdaterSimple(learningRate);
     
     nn = network();
     

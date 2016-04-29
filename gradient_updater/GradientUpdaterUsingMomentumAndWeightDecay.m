@@ -4,7 +4,6 @@ classdef GradientUpdaterUsingMomentumAndWeightDecay < GradientUpdaterInterface
     
     properties (Access = 'private')
         learningRate
-        minibatchSize
         mu
         weightDecay
         
@@ -12,9 +11,8 @@ classdef GradientUpdaterUsingMomentumAndWeightDecay < GradientUpdaterInterface
     end
     
     methods (Access = 'public')
-        function obj = GradientUpdaterUsingMomentumAndWeightDecay(learningRate, minibatchSize, mu, weightDecay)
+        function obj = GradientUpdaterUsingMomentumAndWeightDecay(learningRate, mu, weightDecay)
             obj.learningRate = learningRate;
-            obj.minibatchSize = minibatchSize;
             obj.mu = mu; % momentum
             obj.weightDecay = weightDecay;
         end
@@ -24,7 +22,7 @@ classdef GradientUpdaterUsingMomentumAndWeightDecay < GradientUpdaterInterface
                 obj.weightsV = zeros(size(dw'));
             end
             
-            obj.weightsV =  obj.mu * obj.weightsV - dw' * obj.learningRate / obj.minibatchSize - obj.weightDecay * obj.learningRate * weights;
+            obj.weightsV =  obj.mu * obj.weightsV - dw' * obj.learningRate - obj.weightDecay * obj.learningRate * weights;
             weights = weights + obj.weightsV;
         end
         
