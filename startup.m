@@ -7,5 +7,6 @@ function [ output_args ] = startup( input_args )
     addpath('weight_filler');
     addpath('gradient_updater');
     addpath('nn');
+    addpath('training_funcs');
 end
 
