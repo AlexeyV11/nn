@@ -31,16 +31,16 @@ function [ output_args ] = fc_learning_api( input_args )
     for epoch = 1:500
         if(rem(epoch, 1) == 0)
             output_train_full = nn.forwardPropogate(input_train);
-            loss_full_train = lossLayer.computeLoss(output_train_full, output_train);
+            loss_full_train = lossLayer.computeLoss(output_train_full{end}, output_train);
 
-            [val_train, ind_train] = max(output_train_full');
+            [val_train, ind_train] = max(output_train_full{end}');
             ind_train = ind_train'-1;
             accuracy_train = (sum(ind_train == output_train_labels)) / numel(ind_train);
 
             output_test_full = nn.forwardPropogate(input_test);
-            loss_full_test = lossLayer.computeLoss(output_test_full, output_test);
+            loss_full_test = lossLayer.computeLoss(output_test_full{end}, output_test);
 
-            [val_test, ind_test] = max(output_test_full');
+            [val_test, ind_test] = max(output_test_full{end}');
             ind_test = ind_test'-1;
             accuracy_test = (sum(ind_test == output_test_labels)) / numel(ind_test);
 
@@ -56,9 +56,9 @@ function [ output_args ] = fc_learning_api( input_args )
             answers = output_train((iters-1)*minibatchSize+1:iters*minibatchSize,:);
             
             output_train_batch = nn.forwardPropogate(samples);
-            loss = lossLayer.computeLoss(output_train_batch, answers);
+            loss = lossLayer.computeLoss(output_train_batch{end}, answers);
             
-            nn.backPropagate(lossLayer.computeDerivative(output_train_batch, answers));
+            nn.backPropagate(output_train_batch, lossLayer.computeDerivative(output_train_batch{end}, answers));
         end
 
         

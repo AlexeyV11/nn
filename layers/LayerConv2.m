@@ -40,7 +40,7 @@ classdef LayerConv2 < LayerInterface
             end
         end
         
-        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, gradientUpdater)
+        function [gradientToPrev, gradientCurrent] = backPropagate(obj, gradientToCurrent, activationsPrev)
             error('not implemented');
             % http://www.slideshare.net/kuwajima/cnnbp
             
@@ -76,6 +76,8 @@ classdef LayerConv2 < LayerInterface
             
         end
         
+        function [] = update(obj, gradientUpdater, gradient)
+        end
     end    
 end
 

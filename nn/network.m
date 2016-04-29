@@ -18,23 +18,31 @@ classdef network < handle
             obj.gradientUpdaters{end+1} = gradientUpdater;
         end
         
-        function [output] = forwardPropogate(obj, input)
+        function [outputs] = forwardPropogate(obj, input)
+            
+            outputs = cell(1, numel(obj.layers)+1);
             % forward pass
-            output = input;
+            outputs{1} = input;
             for l=1:numel(obj.layers)
                 if(find(strcmp(superclasses(obj.layers{l}), 'LayerInterface')))
-                    output = obj.layers{l}.feedForward(output);
+                    outputs{l+1} = obj.layers{l}.feedForward(outputs{l});
                 end
             end
         end
         
-        function [backwardOutput] = backPropagate(obj, lossDerivative)
+        function [gradients] = backPropagate(obj, outputs, lossDerivative)
             %backward pass
+            gradients =  cell(1, numel(obj.layers));
+
             backwardOutput = lossDerivative;
             for l=numel(obj.layers):-1:1
                 if(find(strcmp(superclasses(obj.layers{l}), 'LayerInterface')))
-                    backwardOutput = obj.layers{l}.backPropagate(backwardOutput, obj.gradientUpdaters{l});
+                    [backwardOutput, gradients{l}] = obj.layers{l}.backPropagate(backwardOutput, outputs{l});
                 end
+            end
+            
+            for l=numel(obj.layers):-1:1
+                obj.layers{l}.update(obj.gradientUpdaters{l}, gradients{l});
             end
         end
         

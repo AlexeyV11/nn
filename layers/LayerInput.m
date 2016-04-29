@@ -9,14 +9,18 @@ classdef LayerInput < LayerInterface
         function obj = LayerInput(obj, inputDimension)
         end
         
-        function [result] = feedForward(obj, activationsPrev)
-            result = activationsPrev;
+        function [activationsCurrent] = feedForward(obj, activationsPrev)
+            activationsCurrent = activationsPrev;
         end
         
-        function [gradientToPrev] = backPropagate(obj, gradientToCurrent, gradientUpdater)
+        function [gradientToPrev, gradientCurrent] = backPropagate(obj, gradientToCurrent, activationsPrev)
             gradientToPrev = {};
+            gradientCurrent = gradientToCurrent;
         end
         
+        function [] = update(obj, gradientUpdater, gradient)
+        end
+
     end    
 end
 
