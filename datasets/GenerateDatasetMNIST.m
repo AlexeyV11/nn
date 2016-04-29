@@ -1,14 +1,14 @@
-function [ input_train, output_train, output_train_sparse, input_test, output_test, output_test_sparse] = GenerateDatasetMNIST()
-    input_train = loadMNISTImages('mnist-train-images-ubyte');
-    input_train = input_train';
-    input_test = loadMNISTImages('mnist-test-images-ubyte');
-    input_test = input_test';
+function [ train_input, train_classes, test_input, test_classes] = GenerateDatasetMNIST()
+    train_input = loadMNISTImages('mnist-train-images-ubyte');
+    train_input = train_input';
+    test_input = loadMNISTImages('mnist-test-images-ubyte');
+    test_input = test_input';
     
     output_train = loadMNISTLabels('mnist-train-labels-ubyte');
     output_test = loadMNISTLabels('mnist-test-labels-ubyte');
 
-    output_test_sparse = LabelsToSparse(output_test, 10);
-    output_train_sparse = LabelsToSparse(output_train, 10);
+    test_classes = LabelsToSparse(output_test, 10);
+    train_classes = LabelsToSparse(output_train, 10);
 end
 
 function [sparseLabel] = LabelsToSparse(labels, max_label)
