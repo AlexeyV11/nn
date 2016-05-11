@@ -7,6 +7,10 @@ classdef GradientUpdaterSimple < GradientUpdaterInterface
     end
     
     methods (Access = 'public')
+        function [] = setLearningRate(obj, lr)
+            obj.learningRate = lr;
+        end
+        
         function obj = GradientUpdaterSimple(learningRate)
             obj.learningRate = learningRate;
         end

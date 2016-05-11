@@ -25,21 +25,37 @@ function [ output_args ] = fc_learning_api( input_args )
     nn.addLayer(LayerActivationRELU,  {});
     
         
-    epochs = 50;
+    epochs = 5;
     minibatchSize = 64;
     
     trainSoftmaxNetwork(nn, epochs, minibatchSize, train_input, train_classes);
 
-    output_train_full = nn.forwardPropogate(train_input);
-    [~, ind_train] = max(output_train_full{end}');
-    [~, ind_train_gt] = max(train_classes');
-    accuracy_train = (sum(ind_train == ind_train_gt)) / numel(ind_train);
-
-    output_test_full = nn.forwardPropogate(test_input);
-    [~, ind_test] = max(output_test_full{end}');
-    [~, ind_test_gt] = max(test_classes');
-    accuracy_test = (sum(ind_test == ind_test_gt)) / numel(ind_test);
-
-    disp(['train accuracy : ' num2str(accuracy_train) ' test accuracy : ' num2str(accuracy_test)]);
+    rand_input = rand(1,784);
+    lossLayer = LossSoftmax(size(train_input,2));
+    
+    nn.setLayersLearningRate(0);
+      
+    outputs = nn.forwardPropogate(rand_input);
+    output_last = outputs{end};
+    answers = max(output_last) == output_last;
+        
+    for i=1:1000
+        img = reshape(rand_input, [28 28]);
+        
+        imshow(img);
+        pause(0.1);
+        
+        outputs = nn.forwardPropogate(rand_input);
+        output_last = outputs{end};
+        
+        %loss = lossLayer.computeLoss(output_last, answers);
+        
+        grads = nn.backPropagate(outputs, lossLayer.computeDerivative(output_last, answers));
+        
+        
+        rand_input = rand_input - grads{1} * 0.5;
+        
+        disp(output_last);
+    end
 end
 

@@ -1,4 +1,4 @@
-classdef GradientUpdaterInterface
+classdef GradientUpdaterInterface < handle
     properties
     end
     
@@ -6,6 +6,7 @@ classdef GradientUpdaterInterface
     end
     
     methods(Abstract, Access = public)
+        [] = setLearningRate(obj, lr)
         [weights] = update(obj, weights, dw)
     end    
 end

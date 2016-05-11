@@ -13,6 +13,14 @@ classdef network < handle
             obj.gradientUpdaters = {};
         end
         
+        function [] = setLayersLearningRate(obj, lr)
+            for i=1:numel(obj.gradientUpdaters)
+                if ~isempty(obj.gradientUpdaters{i})
+                    obj.gradientUpdaters{i}.setLearningRate(lr);
+                end
+            end
+        end
+        
         function [] = addLayer(obj, layer, gradientUpdater)
             obj.layers{end+1} = layer;
             obj.gradientUpdaters{end+1} = gradientUpdater;
