@@ -12,7 +12,7 @@ function [ output_args ] = fc_learning_api( input_args )
     rng(0,'v5uniform');
     
     
-    learningRate = 0.05;
+    learningRate = 0.1;
     momentum = 0.9;
     weightDecay = 0.0005;
     

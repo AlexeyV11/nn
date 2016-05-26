@@ -19,7 +19,7 @@ function [ output_args ] = trainTripletLossNetwork( nn, epochs, minibatchSize, m
         lossEpoch = [];
         
         for iters = 1:itersCount 
-            
+        
             feats = struct();
             [feats.anchor, feats.positive, feats.negative] = generate_triplets(features, minibatchSize);
     
@@ -47,8 +47,7 @@ function [ output_args ] = trainTripletLossNetwork( nn, epochs, minibatchSize, m
             
             nn.updateWeights(grad);
             
-            disp(sum(loss) / numel(loss));
-            
+            disp(sum(loss) / numel(loss));        
         end
 
         disp(['epoch : ' num2str(epoch) ' loss : ' num2str(sum(lossEpoch) / numel(lossEpoch))]);
