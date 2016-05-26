@@ -38,7 +38,7 @@ classdef network < handle
             end
         end
         
-        function [gradients] = backPropagate(obj, outputs, lossDerivative)
+        function [gradients] = backPropagate1(obj, outputs, lossDerivative)
             %backward pass
             gradients =  cell(1, numel(obj.layers));
 
@@ -48,13 +48,13 @@ classdef network < handle
                     [backwardOutput, gradients{l}] = obj.layers{l}.backPropagate(backwardOutput, outputs{l});
                 end
             end
-            
+        end
+
+        function [] = updateWeights(obj, gradients)
             for l=numel(obj.layers):-1:1
                 obj.layers{l}.update(obj.gradientUpdaters{l}, gradients{l});
             end
         end
-        
-        
         
     end
     

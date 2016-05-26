@@ -15,7 +15,9 @@ function [ output_args ] = trainSoftmaxNetwork( nn, epochs, minibatchSize, input
             loss = lossLayer.computeLoss(output_train_batch{end}, answers);
         
             lossEpoch = [lossEpoch; loss];
-            nn.backPropagate(output_train_batch, lossLayer.computeDerivative(output_train_batch{end}, answers));
+            grad = nn.backPropagate1(output_train_batch, lossLayer.computeDerivative(output_train_batch{end}, answers));
+            
+            nn.updateWeights(grad);
         end
 
         disp(['epoch : ' num2str(epoch) ' loss : ' num2str(sum(lossEpoch) / numel(lossEpoch))]);

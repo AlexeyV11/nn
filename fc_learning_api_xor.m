@@ -27,7 +27,9 @@ function [ output_args ] = fc_learning_api( input_args )
     for i = 1:2000
         output_train_current = nn.forwardPropogate(input_train);
         %loss = lossLayer.computeLoss(output_train_current, output_train);
-        nn.backPropagate(output_train_current, lossLayer.computeDerivative(output_train_current{end}, output_train));
+        grad = nn.backPropagate1(output_train_current, lossLayer.computeDerivative(output_train_current{end}, output_train));
+        
+        nn.updateWeights(grad);
     end
     
     

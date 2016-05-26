@@ -34,8 +34,6 @@ function [ output_args ] = fc_learning_api( input_args )
     rand_input = train_input(2,:);
     lossLayer = LossEuclidean(size(train_input,2));
     
-    nn.setLayersLearningRate(0);
-      
     answers = [0 0 0 0 0 0 0 0 0 1];
         
     for i=1:100
@@ -50,7 +48,7 @@ function [ output_args ] = fc_learning_api( input_args )
         
         loss = lossLayer.computeLoss(output_last, answers);
         
-        grads = nn.backPropagate(outputs, lossLayer.computeDerivative(output_last, answers));
+        grads = nn.backPropagate1(outputs, lossLayer.computeDerivative(output_last, answers));
         
         
         rand_input = rand_input - grads{1};
