@@ -7,16 +7,18 @@ function [ output_args ] = triplet_learning( input_args )
     
     hidden_neurons_count = 50;
     input_dim = size(train_input,2);
-            
+    output_neurons_count = 10;
+    
     learningRate = 0.05;
     momentum = 0.9;
     weightDecay = 0.0005;
     
     nn = network();
-    
     nn.addLayer(LayerInput(input_dim), {});
     nn.addLayer(LayerFC(input_dim,hidden_neurons_count,WeightFillerGaussian(0.001)),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, momentum, weightDecay));
-    nn.addLayer(LayerActivationRELU,  {});
+    nn.addLayer(LayerActivationSigmoid,  {});
+    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.001)),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, momentum, weightDecay));
+    nn.addLayer(LayerActivationSigmoid,  {});
             
     minibatchSize = 64;
     epochs = 50;
