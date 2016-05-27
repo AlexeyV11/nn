@@ -38,6 +38,14 @@ function [] = test_softmax(train_input, train_classes)
     
     trainSoftmaxNetwork(nn, epochs, minibatchSize, train_input, train_classes);
     
+    
+    output_train_full = nn.forwardPropogate(train_input);
+    [~, ind_train] = max(output_train_full{end}');
+    [~, ind_train_gt] = max(train_classes');
+    accuracy_train = (sum(ind_train == ind_train_gt)) / numel(ind_train);
+
+    disp(['train accuracy : ' num2str(accuracy_train)]);
+    
     dataProvider = TripletDataProvider(train_input, train_classes);
     evaluate_softmax(nn, dataProvider.features);
 end
@@ -71,6 +79,7 @@ function [] = evaluate_softmax(nn, features)
         
     end
     
+    disp('softmax');
     disp(num2str(right));
     disp(num2str(wrong));
 end
@@ -130,6 +139,7 @@ function [] = evaluate_triplet(nn, features)
         
     end
     
+    disp('triplet');
     disp(num2str(right));
     disp(num2str(wrong));
 end
