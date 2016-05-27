@@ -5,6 +5,12 @@ function [ output_args ] = triplet_learning( input_args )
     
     [train_input, train_classes, test_input,  test_classes] = GenerateDatasetMNIST();
     
+    
+    test_triplet(train_input, train_classes);
+    %test_softmax(train_input, train_classes);
+end
+
+function [] = test_triplet(train_input, train_classes)
     hidden_neurons_count = 50;
     input_dim = size(train_input,2);
     output_neurons_count = 10;
@@ -21,15 +27,19 @@ function [ output_args ] = triplet_learning( input_args )
     %nn.addLayer(LayerActivationSigmoid,  {});
             
     minibatchSize = 64;
-    epochs = 5;
+    epochs = 1;
     margin = 0.3;
     
     dataProvider = TripletDataProvider(train_input, train_classes);
     trainTripletLossNetwork(nn, epochs, minibatchSize, margin, dataProvider);
     
+    evaluate_triplet(nn, dataProvider.features);
+end
+
+function [] = evaluate_triplet(nn, features)
     inputs = zeros(10,784);
     for i=1:10
-        inputs(i,:) = dataProvider.features{i}{1};
+        inputs(i,:) = features{i}{1};
     end
     
     outputs = nn.forwardPropogate(inputs);
@@ -38,8 +48,8 @@ function [ output_args ] = triplet_learning( input_args )
     right = 0;
     wrong = 0;
     for digits=1:10
-        for sampleInd=1:numel( dataProvider.features{digits})
-            sampleFeature = dataProvider.features{digits}{sampleInd};
+        for sampleInd=1:numel( features{digits})
+            sampleFeature = features{digits}{sampleInd};
             sampleOutput = nn.forwardPropogate(sampleFeature);
             sampleOutput = sampleOutput{end};
             
@@ -56,17 +66,4 @@ function [ output_args ] = triplet_learning( input_args )
     
     disp(num2str(right));
     disp(num2str(wrong));
-        
-    %output_train_full = nn.forwardPropogate(train_input);
-    %[~, ind_train] = max(output_train_full{end}');
-    %[~, ind_train_gt] = max(train_classes');
-    %accuracy_train = (sum(ind_train == ind_train_gt)) / numel(ind_train);
-
-    %output_test_full = nn.forwardPropogate(test_input);
-    %[~, ind_test] = max(output_test_full{end}');
-    %[~, ind_test_gt] = max(test_classes');
-    %accuracy_test = (sum(ind_test == ind_test_gt)) / numel(ind_test);
-
-    %disp(['train accuracy : ' num2str(accuracy_train) ' test accuracy : ' num2str(accuracy_test)]);
 end
-
