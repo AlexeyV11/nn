@@ -2,7 +2,7 @@ classdef TripletDataProvider < handle
     properties
     end
     
-    properties (Access = 'private')
+    properties (Access = 'public')
         features
         samplesCount
         feat_matrix
