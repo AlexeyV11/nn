@@ -3,11 +3,15 @@ function [ output_args ] = trainTripletLossNetwork( nn, epochs, minibatchSize, m
     
     lossTriplet = LossTriplet(margin);
     
+    
+    
     for epoch = 1:epochs
+        
+    
         itersCount = floor(dataProvider.getSamplesCount()/minibatchSize);
-        
-        lossEpoch = [];
-        
+    
+        lossEpoch = 0;
+    
         for iters = 1:itersCount 
         
             feats = struct();
@@ -37,10 +41,10 @@ function [ output_args ] = trainTripletLossNetwork( nn, epochs, minibatchSize, m
             
             nn.updateWeights(grad);
             
-            disp(sum(loss) / numel(loss));        
+            lossEpoch = lossEpoch + sum(loss) / numel(loss);
         end
 
-        disp(['epoch : ' num2str(epoch) ' loss : ' num2str(sum(lossEpoch) / numel(lossEpoch))]);
+        disp(['epoch : ' num2str(epoch) ' loss : ' num2str(lossEpoch / itersCount)]);
     end
 end
 
