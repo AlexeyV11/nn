@@ -8,5 +8,6 @@ function [ output_args ] = startup( input_args )
     addpath('gradient_updater');
     addpath('nn');
     addpath('training_funcs');
+    addpath('data_provider');
 end
 

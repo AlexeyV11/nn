@@ -24,7 +24,8 @@ function [ output_args ] = triplet_learning( input_args )
     epochs = 50;
     margin = 0.3;
     
-    trainTripletLossNetwork(nn, epochs, minibatchSize, margin, train_input, train_classes);
+    dataProvider = TripletDataProvider(train_input, train_classes);
+    trainTripletLossNetwork(nn, epochs, minibatchSize, margin, dataProvider);
 
     %output_train_full = nn.forwardPropogate(train_input);
     %[~, ind_train] = max(output_train_full{end}');
