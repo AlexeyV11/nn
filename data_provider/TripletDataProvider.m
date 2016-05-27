@@ -5,6 +5,7 @@ classdef TripletDataProvider < handle
     properties (Access = 'private')
         features
         samplesCount
+        feat_matrix
     end
     
     methods (Access = 'public')
@@ -22,6 +23,20 @@ classdef TripletDataProvider < handle
             end
             
             obj.samplesCount = size(output_labels,1);
+            
+            
+            
+            obj.feat_matrix = zeros(obj.samplesCount, 784);
+
+            ind = 1;
+            for i = 1:numel(obj.features)
+                for j = 1:numel(obj.features{i})
+                    feat = obj.features{i}{j};
+                    obj.feat_matrix(ind,:) = feat(1,:);
+
+                    ind = ind + 1;
+                end
+            end
 
         end
         
@@ -79,25 +94,14 @@ classdef TripletDataProvider < handle
                 disp(['arr index check 6 ' num2str(sum(negative_arr_index <= feat_shift(negative_person_index)+feat_count(negative_person_index)) == triplets_count)]);
             end
 
-            arr = zeros(count, 784);
-
-            ind = 1;
-            for i = 1:numel(obj.features)
-                for j = 1:numel(obj.features{i})
-                    feat = obj.features{i}{j};
-                    arr(ind,:) = feat(1,:);
-
-                    ind = ind + 1;
-                end
-            end
             triplets = [positive_arr_index_1' positive_arr_index_2' negative_arr_index'];
 
             inds = positive_arr_index_1' ~= positive_arr_index_2';
             triplets = triplets(inds,:);
 
-            anchor_feats = arr(triplets(:,1),:);
-            positive_feats = arr(triplets(:,2),:);
-            negative_feats = arr(triplets(:,3),:);
+            anchor_feats = obj.feat_matrix(triplets(:,1),:);
+            positive_feats = obj.feat_matrix(triplets(:,2),:);
+            negative_feats = obj.feat_matrix(triplets(:,3),:);
 
 
             %disp(['setLearningRate' num2str(obj.learningRate)]);
