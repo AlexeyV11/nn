@@ -22,6 +22,12 @@ classdef LossTriplet < LossInterface
             anchor_derivative = 2 * (negative - positive);
             positive_derivative = 2 * (positive - anchor);
             negative_derivative = 2 * (anchor - negative);
+            
+            loss = computeLoss(obj, anchor, positive, negative);
+            
+            anchor_derivative(loss == 0, :) = 0;
+            positive_derivative(loss == 0, :) = 0;
+            negative_derivative(loss == 0, :) = 0;
         end
         
         function [dists] = mydist(obj, anchor_feats, positive_feats)
