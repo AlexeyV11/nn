@@ -6,16 +6,12 @@ function [ output_args ] = trainTripletLossNetwork( nn, epochs, minibatchSize, m
         lossEpoch = 0;
     
         for iters = 1:itersCount 
-            feats = struct();
-            [feats.anchor, feats.positive, feats.negative] = dataProvider.getMinibatch(minibatchSize);
+            feats = getProperTriplets( nn, minibatchSize, margin, dataProvider);
             
             %feats.anchor =      bsxfun(@rdivide, feats.anchor,      sqrt(sum(abs(feats.anchor).^2,2)));
             %feats.positive =    bsxfun(@rdivide, feats.positive,    sqrt(sum(abs(feats.positive).^2,2)));
             %feats.negative =    bsxfun(@rdivide, feats.negative,    sqrt(sum(abs(feats.negative).^2,2)));
             
-            %anchorNorm =    sqrt(sum(abs(feats.anchor).^2,2));
-            %positiveNorm =  sqrt(sum(abs(feats.positive).^2,2));
-            %negativeNorm =  sqrt(sum(abs(feats.negative).^2,2));
             anchorOutputs = nn.forwardPropogate(feats.anchor);
             positiveOutputs = nn.forwardPropogate(feats.positive);
             negativeOutputs = nn.forwardPropogate(feats.negative);
@@ -44,4 +40,11 @@ function [ output_args ] = trainTripletLossNetwork( nn, epochs, minibatchSize, m
         disp(['epoch : ' num2str(epoch) ' loss : ' num2str(lossEpoch / itersCount)]);
     end
 end
+
+
+function [ feats ] = getProperTriplets( nn, minibatchSize, margin, dataProvider)
+    feats = struct();
+    [feats.anchor, feats.positive, feats.negative] = dataProvider.getMinibatch(minibatchSize);
+end
+
 
