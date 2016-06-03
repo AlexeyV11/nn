@@ -5,7 +5,7 @@ function [ output_args ] = triplet_learning( input_args )
     
     [train_input, train_classes, test_input,  test_classes] = GenerateDatasetMNIST();
     
-    %test_softmax(train_input, train_classes);
+    test_softmax(train_input, train_classes);
     test_triplet(train_input, train_classes);
 end
 

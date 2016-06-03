@@ -2,7 +2,7 @@ function [ output_args ] = trainTripletLossNetwork( nn, epochs, minibatchSize, m
     lossTriplet = LossTriplet(margin);
 
     
-    disp(['epoch : ' num2str(0) ' loss : ' num2str(compute_epoch_loss(nn, 4096, margin, dataProvider))]);
+    disp(['epoch : ' num2str(0) ' loss : ' num2str(compute_epoch_loss(nn, minibatchSize * 128, margin, dataProvider))]);
 
     for epoch = 1:epochs
         itersCount = floor(dataProvider.getSamplesCount()/minibatchSize);
@@ -38,7 +38,7 @@ function [ output_args ] = trainTripletLossNetwork( nn, epochs, minibatchSize, m
         end
 
         
-        disp(['epoch : ' num2str(epoch) ' loss : ' num2str(compute_epoch_loss(nn, 4096, margin, dataProvider))]);
+        disp(['epoch : ' num2str(epoch) ' loss : ' num2str(compute_epoch_loss(nn, minibatchSize * 128, margin, dataProvider))]);
     end
 end
 
