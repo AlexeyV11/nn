@@ -27,9 +27,16 @@ classdef TripletDataProvider < handle
                 obj.features{labels(i)}{end+1} = input_features(i,:);
             end
             
-            obj.samplesCount = size(output_labels,1);
-            
-            
+            obj.prepareUsingFeatures();
+        end
+        
+        function [] = prepareUsingFeatures(obj)
+
+            obj.samplesCount = 0;
+
+            for i=1:numel(obj.features)
+                obj.samplesCount = obj.samplesCount + numel(obj.features{i});
+            end
             
             obj.feat_matrix = zeros(obj.samplesCount, 784);
 
@@ -60,7 +67,6 @@ classdef TripletDataProvider < handle
                 obj.samples_fot_label_max_count = max(obj.samples_fot_label_max_count, numel(obj.features{i}));
 
             end
-
         end
         
         function [count] = getSamplesCount(obj)

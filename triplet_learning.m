@@ -1,7 +1,7 @@
 function [ output_args ] = triplet_learning( input_args )
 %FC_LEARNING_API Summary of this function goes here
 %   Detailed explanation goes here
-    startup();
+    startup_nn();
     
     [train_input, train_classes, test_input,  test_classes] = GenerateDatasetMNIST();
     
