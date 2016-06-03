@@ -19,13 +19,13 @@ function [ output_args ] = fc_learning_api( input_args )
     nn = network();
     
     nn.addLayer(LayerInput(input_dim), {});
-    nn.addLayer(LayerFC(input_dim,hidden_neurons_count,WeightFillerGaussian(0.001)),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, momentum, weightDecay));
+    nn.addLayer(LayerFC(input_dim,hidden_neurons_count,WeightFillerGaussian(1/(input_dim + hidden_neurons_count))),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, momentum, weightDecay));
     nn.addLayer(LayerActivationRELU,  {});
-    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(0.001)),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, momentum, weightDecay));
+    nn.addLayer(LayerFC(hidden_neurons_count,output_neurons_count,WeightFillerGaussian(1/(hidden_neurons_count + output_neurons_count))),  GradientUpdaterUsingMomentumAndWeightDecay(learningRate, momentum, weightDecay));
     nn.addLayer(LayerActivationRELU,  {});
     
         
-    epochs = 50;
+    epochs = 10;
     minibatchSize = 64;
     
     trainSoftmaxNetwork(nn, epochs, minibatchSize, train_input, train_classes);
