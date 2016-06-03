@@ -12,7 +12,7 @@ classdef WeightFillerGaussian < WeightFillerInterface
         end
         
         function [weights] = generateWeights(obj, size)
-            weights = sqrt(obj.variance)*randn(size);
+            weights = random('normal',0,obj.variance,size);
         end
         
         

@@ -5,14 +5,14 @@ function [ output_args ] = fc_learning_api( input_args )
     
     [train_input, train_classes, test_input,  test_classes] = GenerateDatasetMNIST();
     
-    hidden_neurons_count = 50;
+    hidden_neurons_count = 500;
     output_neurons_count = 10;
     input_dim = size(train_input,2);
     
     rng(0,'v5uniform');
     
     
-    learningRate = 0.1;
+    learningRate = 0.0005;
     momentum = 0.9;
     weightDecay = 0.0005;
     
@@ -25,7 +25,7 @@ function [ output_args ] = fc_learning_api( input_args )
     nn.addLayer(LayerActivationRELU,  {});
     
         
-    epochs = 10;
+    epochs = 30;
     minibatchSize = 64;
     
     trainSoftmaxNetwork(nn, epochs, minibatchSize, train_input, train_classes);
