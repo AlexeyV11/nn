@@ -5,8 +5,7 @@ function [ output_args ] = triplet_learning( input_args )
     
     [train_input, train_classes, test_input,  test_classes] = GenerateDatasetMNIST();
     
-    test_softmax(train_input, train_classes);
-    
+    %test_softmax(train_input, train_classes);
     test_triplet(train_input, train_classes);
 end
 
@@ -90,7 +89,7 @@ function [] = test_triplet(train_input, train_classes)
     input_dim = size(train_input,2);
     output_neurons_count = 10;
     
-    learningRate = 0.1;
+    learningRate = 0.05;
     momentum = 0.9;
     weightDecay = 0.0005;
     
@@ -102,7 +101,7 @@ function [] = test_triplet(train_input, train_classes)
     %nn.addLayer(LayerActivationSigmoid,  {});
             
     minibatchSize = 64;
-    epochs = 10;
+    epochs = 5;
     margin = 0.3;
     
     dataProvider = TripletDataProvider(train_input, train_classes);
