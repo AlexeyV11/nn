@@ -2,7 +2,7 @@ classdef LayerFC < LayerInterface
     properties
     end
     
-    properties (Access = 'private')        
+    properties (Access = 'public')        
         weights;
         neuronsPrevCount;
         neuronsCurrentCount;

@@ -12,6 +12,10 @@ classdef LossTriplet < LossInterface
         end
         
         function [result] = computeLoss(obj, anchor, positive, negative)
+            %anchor = obj.mynorm(anchor);
+            %positive = obj.mynorm(positive);
+            %negative = obj.mynorm(negative);
+
             dists_ap = obj.mydist(anchor, positive);
             dists_an = obj.mydist(anchor, negative);
 
@@ -34,7 +38,13 @@ classdef LossTriplet < LossInterface
             diff = (anchor_feats - positive_feats);
             dists = sqrt(sum(diff.^2,2));
         end
+        
+        %function [featsNormalized] = mynorm(obj, feats)
+        %    factor = sqrt(sum(feats.*feats,2));
+        %    featsNormalized = feats ./ repmat(factor,1,size(feats,2));
+        %end
 
     end    
 end
+
 
