@@ -45,7 +45,22 @@ function [] = test_softmax(train_input, train_classes)
 
     disp(['train accuracy : ' num2str(accuracy_train)]);
     
-    dataProvider = TripletDataProvider(train_input, train_classes);
+    
+    [~,labels] = max(train_classes');
+     
+    features = cell(1,max(labels));
+    for i=1:numel(features)
+        features{i} = {};
+    end
+ 
+    for i=1:numel(labels)
+        features{labels(i)}{end+1} = train_input(i,:);
+    end
+
+    feats = struct();
+    feats.features = features;
+    
+    dataProvider = TripletDataProvider(feats);
     evaluate_softmax(nn, dataProvider.features);
 end
 
@@ -104,7 +119,22 @@ function [] = test_triplet(train_input, train_classes)
     epochs = 5;
     margin = 0.3;
     
-    dataProvider = TripletDataProvider(train_input, train_classes);
+    [~,labels] = max(train_classes');
+     
+    features = cell(1,max(labels));
+    for i=1:numel(features)
+        features{i} = {};
+    end
+ 
+    for i=1:numel(labels)
+        features{labels(i)}{end+1} = train_input(i,:);
+    end
+
+    feats = struct();
+    feats.features = features;
+    
+    
+    dataProvider = TripletDataProvider(feats);
     trainTripletLossNetwork(nn, epochs, minibatchSize, margin, dataProvider);
     
     evaluate_triplet(nn, dataProvider.features);

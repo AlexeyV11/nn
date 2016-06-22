@@ -15,20 +15,26 @@ classdef TripletDataProvider < handle
     
     methods (Access = 'public')
         
-        function [obj] = TripletDataProvider(input_features, output_labels)
-            [~,labels] = max(output_labels');
-    
-            obj.features = cell(1,max(labels));
-            for i=1:numel(obj.features)
-                obj.features{i} = {};
-            end
-
-            for i=1:numel(labels)
-                obj.features{labels(i)}{end+1} = input_features(i,:);
-            end
-            
+%         function [obj] = TripletDataProvider(input_features, output_labels)
+%             [~,labels] = max(output_labels');
+%     
+%             obj.features = cell(1,max(labels));
+%             for i=1:numel(obj.features)
+%                 obj.features{i} = {};
+%             end
+% 
+%             for i=1:numel(labels)
+%                 obj.features{labels(i)}{end+1} = input_features(i,:);
+%             end
+%             
+%             obj.prepareUsingFeatures();
+%         end
+        
+        function [obj] = TripletDataProvider(feats)
+            obj.features = feats.features;
             obj.prepareUsingFeatures();
         end
+        
         
         function [] = prepareUsingFeatures(obj)
 
@@ -38,17 +44,34 @@ classdef TripletDataProvider < handle
                 obj.samplesCount = obj.samplesCount + numel(obj.features{i});
             end
             
-            obj.feat_matrix = zeros(obj.samplesCount, 784);
+            obj.feat_matrix = zeros(obj.samplesCount, numel(obj.features{1}{1}));
 
-            ind = 1;
-            for i = 1:numel(obj.features)
-                for j = 1:numel(obj.features{i})
-                    feat = obj.features{i}{j};
-                    obj.feat_matrix(ind,:) = feat(1,:);
-
-                    ind = ind + 1;
-                end
+            %%%%%%
+            ff = cell(1, numel(obj.features));
+            for i=1:numel(obj.features)
+                ff{i} = cell2mat(obj.features{i}');
             end
+            
+            obj.feat_matrix = cell2mat(ff');
+            
+            ff = {};
+            %%%%%%
+            
+            %%%%%%%%%%%%%%%%%
+%             tic
+%             ind = 1;
+%             for i = 1:numel(obj.features)
+%                 for j = 1:numel(obj.features{i})
+%                     feat = obj.features{i}{j};
+%                     obj.feat_matrix(ind,:) = feat(1,:);
+% 
+%                     ind = ind + 1;
+%                 end
+%             end
+%             
+%             toc
+            %%%%%%%%%%%%%%%%%%%
+            
             
             %%%%% database stats
             label_shift_current = 0;
