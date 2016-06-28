@@ -60,7 +60,7 @@ function [] = test_softmax(train_input, train_classes)
     feats = struct();
     feats.features = features;
     
-    dataProvider = TripletDataProvider(feats);
+    dataProvider = TripletGeneratorRandom(feats);
     evaluate_softmax(nn, dataProvider.features);
 end
 
@@ -134,7 +134,7 @@ function [] = test_triplet(train_input, train_classes)
     feats.features = features;
     
     
-    dataProvider = TripletDataProvider(feats);
+    dataProvider = TripletGeneratorRandom(feats);
     trainTripletLossNetwork(nn, epochs, minibatchSize, margin, dataProvider);
     
     evaluate_triplet(nn, dataProvider.features);
