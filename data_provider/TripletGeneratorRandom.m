@@ -95,7 +95,7 @@ classdef TripletGeneratorRandom < handle
         function [count] = getSamplesCount(obj)
             count = obj.samplesCount;
         end
-        function [anchor_feats, positive_feats, negative_feats] = getMinibatch(obj, triplets_count)
+        function [anchor_feats, positive_feats, negative_feats] = getMinibatch(obj, triplets_count, generate_unique_pairs)
             debug_log = 0;
 
            
@@ -135,6 +135,14 @@ classdef TripletGeneratorRandom < handle
 
             inds = positive_arr_index_1' ~= positive_arr_index_2';
             triplets = triplets(inds,:);
+       
+            
+            if(generate_unique_pairs)
+                [~, rowsInd] = unique(triplets(:,2:3),'rows');
+                triplets = triplets(rowsInd,:);
+                [~, rowsInd] = unique(triplets(:,1:2),'rows');
+                triplets = triplets(rowsInd,:);
+            end
 
             anchor_feats = obj.feat_matrix(triplets(:,1),:);
             positive_feats = obj.feat_matrix(triplets(:,2),:);
